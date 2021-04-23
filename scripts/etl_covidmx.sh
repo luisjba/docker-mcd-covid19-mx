@@ -29,7 +29,7 @@ function download_covid_data(){
     local output=$2
     if [ -n "$url" ]; then
         if [ -n "$output" ]; then
-            if [ ! -f $output ]; then
+            if [ -f $output ]; then
                 echo "File $output already downloaded"
                 return 0
             fi
@@ -39,33 +39,68 @@ function download_covid_data(){
                 echo "Sucessful Downloaded into $output"
                 return 0
             fi
-            echo "Download failed"
+            >&2 echo "Download failed"
             return 3
         fi
-        echo "Missing parameter, call this function as $0 $url output"
+        >&2 echo "Missing parameter, call this function as $0 $url output"
         return 2
     fi
-    echo "Missing parameter, call this function as $0 url output"
+    >&2 echo "Missing parameter, call this function as $0 url output"
     return 1
+}
+function unziped_covid_filename(){
+    pushd "$COVID_DATA_HOME"
+    local covid_filename=$(ls -1 *COVID19MEXICO.csv | grep -E "^2([0-9]+){5}(COVID19MEXICO.csv)$" | head -n 1)
+    local ret_code=$([ -n "$covid_filename" ] && echo "0" || echo "1")
+    [ $ret_code -eq 0 ] && echo "$covid_filename"
+    popd
+    return $ret_code
 }
 
 function unzip_covid_data(){
     # Function to unzip the file
     # arg1: The zip file
     local zip_file=$1
-    if [ -n "$url" ]; then
-        # check if akready unziped
+    if [ -n "$zip_file" ]; then
+        if [ ! -f $zip_file ]; then
+            >&2 echo "File $zip_file not found"
+            return 2
+        fi
+        # check if already unziped
+        local covid_filename=$(unziped_covid_filename)
+        if [ -n "$covid_filename" ]; then
+            echo "File already unziped"
+            echo "$COVID_DATA_HOME/$covid_filename"
+            return 0
+        fi
+        unzip "$zip_file"
+        return $?
     fi
-    echo "Missing parameter, call this function as $0 zip_file"
+    >&2 echo "Missing parameter, call this function as $0 zip_file"
+    return 1
+}
+function analize_covid_data(){
+    # Function to analize The Covid data and produce the csv outputs
+    # arg1: The CSV CVID19 file
+    local csv_covid19=$1
+    if [ -n "$csv_covid19" ]; then
+    fi
+    >&2 echo "Missing parameter, call this function as $0 csv_covid19"
     return 1
 }
 
 [ -d $COVID_DATA_HOME ] || mkdir -p $COVID_DATA_HOME
+pushd "$COVID_DATA_HOME"
 COVID_DESTINATION_ZIP_FILE_OUTPUT="$COVID_DATA_HOME/$COVID_DESTINATION_ZIP_FILE"
 download_covid_data $COVID_DATA_URL "$COVID_DESTINATION_ZIP_FILE_OUTPUT"
 if [ $? -eq 0 ]; then
     unzip_covid_data "$COVID_DESTINATION_ZIP_FILE_OUTPUT"
+    if [ $? -eq 0 ]; then
+        local csv_covid19=$(unziped_covid_filename)
+        analize_covid_data "$csv_covid19"
+    fi
 fi
+popd
 
 
 
