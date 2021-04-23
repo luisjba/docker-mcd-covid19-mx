@@ -11,7 +11,7 @@ ENV COVID_DATA_URL="http://datosabiertos.salud.gob.mx/gobmx/salud/datos_abiertos
 USER root
 RUN rm /etc/dpkg/dpkg.cfg.d/excludes \
     && apt-get update && apt-get install -y --no-install-recommends \ 
-    csvkit \
+    curl csvkit \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 USER $NB_UID
