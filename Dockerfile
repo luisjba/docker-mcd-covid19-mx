@@ -8,6 +8,11 @@ ENV COVID_DATA_URL="http://datosabiertos.salud.gob.mx/gobmx/salud/datos_abiertos
     COVID_DESTINATION_ZIP_FILE=datos_abiertos_covid19.zip
 
 # Install CSV Kit
-RUN apt-get update && apt-get install -y --no-install-recommends csvkit
-
+USER root
+RUN rm /etc/dpkg/dpkg.cfg.d/excludes \
+    && apt-get update && apt-get install -y --no-install-recommends \ 
+    csvkit \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+USER $NB_UID
 COPY scripts/etl_covidmx.sh /usr/local/bin/start-notebook.d/
