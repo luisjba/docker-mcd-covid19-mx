@@ -7,7 +7,7 @@ This Docker was build from jupyter/scipy-notebook
 that belong to the [Jupyter Docker Stacks](https://jupyter-docker-stacks.readthedocs.io/en/latest/index.html) and contains a ready to use Jupyter notebook.
 In order to execute our own scripts, this container offer the feature of Startup Hooks 
 tha allow us to customize the container environment by adding shell scripts. For this particular Customization, our script was configured to be executed before notebook startup.
-Your can inspect our custom script [etl_covidmx.sh](src/etl_covidmx.sh).
+Your can inspect our custom script [etl_covidmx.sh](scripts/etl_covidmx.sh).
 
 ## Running the Container
 
