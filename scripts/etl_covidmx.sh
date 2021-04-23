@@ -20,6 +20,7 @@ MAINTAINER: Jose Luis Bracamonte Amavizca. <luisjba@gmail.com>
 -------------------------------------------------------------------------
 EOL
 cat $HOME/motd
+rm $HOME/motd
 set -e
 function download_covid_data(){
     # Function to downaload the covid file
@@ -85,8 +86,17 @@ function analize_covid_data(){
     # arg1: The CSV CVID19 file
     local csv_covid19=$1
     if [ -n "$csv_covid19" ]; then
-        echo "IMPLEMENT"
-        return 0
+        if [ -f "$csv_covid19" ]; then
+            if [ -f filter_nat.csv ]; then
+                echo "Filter already executed in filter_nat.csv"
+                return 0
+            fi
+            echo "Selecting [Entidad Residencia, Edad, Diabetes, Fecha de Defuncion,  Clasificacion Final]"
+            csvcut -c  ENTIDAD_RES,EDAD,DIABETES,FECHA_DEF,CLASIFICACION_FINAL "$csv_covid19" > filter_nat.csv
+            return 0
+        fi
+        >&2 echo "File not Found $csv_covid19"
+        return 2
     fi
     >&2 echo "Missing parameter, call this function as $0 csv_covid19"
     return 1
