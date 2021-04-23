@@ -68,9 +68,8 @@ function unzip_covid_data(){
         fi
         # check if already unziped
         local covid_filename=$(unziped_covid_filename)
-        if [ -n "$covid_filename" ]; then
-            echo "File already unziped"
-            echo "$COVID_DATA_HOME/$covid_filename"
+        if [ -f "$covid_filename" ]; then
+            echo "File already unziped in $COVID_DATA_HOME/$covid_filename"
             return 0
         fi
         unzip "$zip_file"
@@ -84,6 +83,7 @@ function analize_covid_data(){
     # arg1: The CSV CVID19 file
     local csv_covid19=$1
     if [ -n "$csv_covid19" ]; then
+        echo "IMPLEMENT"
     fi
     >&2 echo "Missing parameter, call this function as $0 csv_covid19"
     return 1
