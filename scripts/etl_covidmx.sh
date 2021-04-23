@@ -2,7 +2,7 @@
 # MAINTAINER: Jose Luis Bracamonte A. <luisjba@gmail.com>
 # Date Created: 2021-04-22
 # Las Updated: 2021-04-22
-cat >/etc/motd <<EOL
+cat >$HOME/motd <<EOL
 v 1.0
  _          _       _      _  _
 | |_  _ _  | | _ _ <_> ___<_>| |_  ___
@@ -19,7 +19,7 @@ Python version: `python --version`
 MAINTAINER: Jose Luis Bracamonte Amavizca. <luisjba@gmail.com>
 -------------------------------------------------------------------------
 EOL
-cat /etc/motd
+cat $HOME/motd
 set -e
 function download_covid_data(){
     # Function to downaload the covid file
@@ -30,7 +30,7 @@ function download_covid_data(){
     if [ -n "$url" ]; then
         if [ -n "$output" ]; then
             if [ -f $output ]; then
-                echo "File $output already downloaded"
+                echo "File already downloaded $output"
                 return 0
             fi
             echo "Downloading $url"
@@ -49,11 +49,11 @@ function download_covid_data(){
     return 1
 }
 function unziped_covid_filename(){
-    pushd "$COVID_DATA_HOME"
+    # pushd "$COVID_DATA_HOME"
     local covid_filename=$(ls -1 *COVID19MEXICO.csv | grep -E "^2([0-9]+){5}(COVID19MEXICO.csv)$" | head -n 1)
     local ret_code=$([ -n "$covid_filename" ] && echo "0" || echo "1")
     [ $ret_code -eq 0 ] && echo "$covid_filename"
-    popd
+    # popd
     return $ret_code
 }
 
@@ -72,7 +72,9 @@ function unzip_covid_data(){
             echo "File already unziped in $COVID_DATA_HOME/$covid_filename"
             return 0
         fi
-        unzip "$zip_file"
+        # unzip and override withour prompting
+        echo "Unziping file $zip_file, please wait ..."
+        unzip -o "$zip_file"
         return $?
     fi
     >&2 echo "Missing parameter, call this function as $0 zip_file"
@@ -84,11 +86,11 @@ function analize_covid_data(){
     local csv_covid19=$1
     if [ -n "$csv_covid19" ]; then
         echo "IMPLEMENT"
+        return 0
     fi
     >&2 echo "Missing parameter, call this function as $0 csv_covid19"
     return 1
 }
-
 [ -d $COVID_DATA_HOME ] || mkdir -p $COVID_DATA_HOME
 pushd "$COVID_DATA_HOME"
 COVID_DESTINATION_ZIP_FILE_OUTPUT="$COVID_DATA_HOME/$COVID_DESTINATION_ZIP_FILE"
@@ -96,11 +98,8 @@ download_covid_data $COVID_DATA_URL "$COVID_DESTINATION_ZIP_FILE_OUTPUT"
 if [ $? -eq 0 ]; then
     unzip_covid_data "$COVID_DESTINATION_ZIP_FILE_OUTPUT"
     if [ $? -eq 0 ]; then
-        local csv_covid19=$(unziped_covid_filename)
+        csv_covid19=$(unziped_covid_filename)
         analize_covid_data "$csv_covid19"
     fi
 fi
 popd
-
-
-
