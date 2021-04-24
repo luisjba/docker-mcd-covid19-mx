@@ -42,4 +42,4 @@ with the docker compose command that comes by default in the docker installation
 docker-compose up
 ```
 
-Press `Ctrl+C` to stop the instance
+Press `Ctrl+C` to stop the instance. If you run the configured instanses as daemon, you can tear it all down with the command `docker-compose down`.
