@@ -37,7 +37,7 @@ As we used this Jupyter Notebook Container to run our notebook to process and pr
 Be sure to be in the root directoruy of this repo.
 
 ```
-docker run -p 8888:8888 --name jupyter -v "$PWD/work":/home/jovyan/work luisjba/mcd-covid19-mx
+docker run -p 8888:8888 --name jupyter -e JUPYTER_ENABLE_LAB=yes -v "$PWD/work":/home/jovyan/work luisjba/mcd-covid19-mx
 ```
 
 Pressing `Ctrl+C` shuts down the notebook server but leaves the container intack on the disk and all the work in our connected volume.
@@ -60,3 +60,9 @@ docker-compose up
 ```
 
 Press `Ctrl+C` to stop the instance. If you run the configured instanses as daemon, you can tear it all down with the command `docker-compose down`.
+
+# Convert results to html
+
+```
+jupyter-nbconvert --to slides work/results.ipynb --reveal-prefix="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.1.0" 
+```
