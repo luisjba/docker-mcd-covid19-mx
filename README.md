@@ -13,6 +13,20 @@ This image is public and can be donwloaded from docker hub and   inspect the [so
 ```
 docker pull uisjba/mcd-covid19-mx
 ```
+To fast use this image, clone the project from github and run docker compose.
+
+Donwload the repo
+```
+glit clone https://github.com/luisjba/docker-mcd-covid19-mx.git
+```
+
+Run the container with  `docker-compose up` inside in the directory `docker-mcd-covid19-mx`.
+```
+cd docker-mcd-covid19-mx
+docker-compose up
+```
+
+Continue reading for more details.
 
 ## Running the Container
 
