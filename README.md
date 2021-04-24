@@ -13,7 +13,10 @@ This image is public and can be donwloaded from docker hub and   inspect the [so
 ```
 docker pull uisjba/mcd-covid19-mx
 ```
-To fast use this image, clone the project from github and run docker compose.
+
+### Quick usage
+
+For a quick usage of this image, clone the project from github and run docker compose.
 
 Donwload the repo
 ```
