@@ -1,0 +1,10 @@
+version: "3.7"
+services:
+    jupyter:
+        image: luisjba/mcd-covid19-mx:latest
+        command: ""
+        ports: 
+            - 8888:8888
+        volumes: 
+            - ./work:/home/jovyan/work
+        
